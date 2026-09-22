@@ -29,16 +29,17 @@ export const profileMenu = [
 ];
 
 export const Mastersmenu = [
-  'Sectors',
+  'Sector',
   'Industries',
-  'Themes',
-  'Themes Industries',
-  'Indicators',
-  'Questions',
-  'Standards',
-  'File Repo',
-  // 'Roles',
-  // 'Report Builder'
+  'Category',
+  'Act',
+  'Section',
+  'Compliance Requirement',
+  'Compliance Obligation',
+  'Applicability Rules',
+  'Compliance Scope',
+  'Questionnaire',
+  'Version',
 ];
 
 export const QUESTION_TYPES = [
