@@ -1,0 +1,8 @@
+.Bread_crumb_title {
+  color: var(--textdark);
+}
+.link_title {
+  color: var(--textLight);
+  font-size: 12px;
+  font-weight: 500;
+}

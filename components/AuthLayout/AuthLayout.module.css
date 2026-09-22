@@ -1,0 +1,177 @@
+/* ----------------------------------------------------------authLayout------------------------------------------ */
+
+.login_flow {
+  border-radius: var(--borderRadiusInside);
+  box-shadow: var(--box-shadow);
+  min-height: 500px;
+  width: 430px;
+  background-color: #fefefe;
+}
+
+.center_panel {
+  display: flex;
+  justify-content: center;
+  z-index: 999;
+}
+
+@media only screen and (max-width: 540px) {
+  .login_flow {
+    min-height: 100vh;
+    width: 100%;
+    box-shadow: none;
+    background-color: #fefefe;
+  }
+
+  .center_panel {
+    display: block !important;
+  }
+
+  .bg_image {
+    background-image: none !important;
+    background-color: #fefefe;
+  }
+
+  .left_img {
+    display: none;
+  }
+
+  .rightImg {
+    display: none;
+
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  .bg_image {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    background-size: cover;
+    background-color: #fefefe;
+    position: relative;
+    overflow: hidden;
+    background-repeat: no-repeat;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  .admin_bg_image {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    background-size: cover;
+    background-color: #fefefe;
+    position: relative;
+    overflow: hidden;
+    background-repeat: no-repeat;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  .admin_bg_image {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    background-size: cover;
+    background-color: #fefefe;
+    position: relative;
+    overflow: hidden;
+    background-repeat: no-repeat;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .left_img {
+    position: absolute;
+    left: -27px !important;
+    bottom: -38px !important;
+  }
+
+  .left_img img {
+    width: 250px;
+    height: 250px;
+  }
+
+  .rightImg img {
+    width: 250px;
+    height: 250px;
+
+  }
+
+  .rightImg {
+    position: absolute;
+    right: -31px !important;
+    bottom: -34px !important;
+  }
+
+  .bg_image {
+    overflow: hidden;
+  }
+
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  width: 100%;
+  transition: 0.5s ease;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 9999;
+}
+
+.left_img {
+  position: absolute;
+  left: -50px;
+  bottom: -55px;
+}
+
+.rightImg {
+  position: absolute;
+  right: -50px;
+  bottom: -55px;
+}
+
+.kd-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.head_title {
+  color: #1d1d1d;
+  font-size: 18px;
+}
+
+.head_description {
+  color: #1d1d1d;
+  font-size: 14px;
+}
+
+.forgot {
+  font-size: 16px;
+  color: #389c9a;
+}
+
+.footer_terms {
+  color: #1d1d1d;
+  font-weight: 400;
+  font-size: 12px !important;
+}
+
+/* ----------------------------------------------------------authLayout------------------------------------------ */

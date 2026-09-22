@@ -1,0 +1,14 @@
+.icon-css {
+  position: absolute !important;
+  right: 10px;
+  top: 33px;
+  cursor: pointer;
+}
+
+.unit-css {
+  min-height: 48px;
+  border-radius: 2px;
+  position: absolute;
+  right: 0;
+  top: 31px;
+}

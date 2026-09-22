@@ -1,0 +1,10 @@
+.dropdown {
+  background: #fefefe;
+  border-radius: 5px;
+  box-shadow: var(--box-shadow);
+  cursor: pointer;
+  padding: 10px 20px;
+  position: absolute;
+  right: 0;
+  width: 290px;
+}

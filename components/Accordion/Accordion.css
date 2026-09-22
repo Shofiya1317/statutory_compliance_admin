@@ -1,0 +1,23 @@
+.accodion_text {
+  font-size: var(--fs14);
+  color: var(--textdark);
+  font-weight: 600;
+}
+
+.accordion {
+  border-radius: 10px !important;
+}
+
+
+.accordion .accordion-item button {
+  background: transparent;
+  box-shadow: none !important;
+  color: var(--textBlack);
+}
+
+.accordion-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 84px !important;
+}

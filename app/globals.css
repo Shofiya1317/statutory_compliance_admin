@@ -1,0 +1,372 @@
+:root {
+  --primary: #305B61;
+  --secondary: #8d91a3;
+  --success: #66cb9f;
+  --info: #4dc4ff;
+  --warning: #f7936f;
+  --danger: #f58787;
+  --light: #e4e5e9;
+  --dark: #344054;
+  --white: #fafeff;
+  --bs-danger: #dc3545;
+  --modal-backdrop-bg: rgba(52, 64, 84, 0.7);
+  --border-radius-sm: 2px;
+  --border-radius-lg: 10px;
+  --box-shadow-sm: 0 0px 4px rgba(0, 0, 0, 0.1);
+  --border-color: #e4e5e9;
+  --h1-font-size: 50px;
+  --h2-font-size: 35px;
+  --h3-font-size: 24px;
+  --h4-font-size: 20px;
+  --h5-font-size: 18px;
+  --h6-font-size: 16px;
+
+  --bgColor: #fafeff;
+  --border: #e4e5e9;
+  --textdark: #344054;
+  --textprimary: #000000;
+  --textLight: #8d91a3;
+  --iconColor: #8d91a3;
+  --hoverColor: #e9eaed;
+  --purple: #c58fff;
+  --success: #66cb9f;
+  --successLight: #e0f5ec;
+  --danger: #f58787;
+  --dangerLight: #fde7e7;
+  --warning: #f7936f;
+  --warningLight: #fde9e2;
+  --blue: #4dc4ff;
+  --blueLight: #dbf3ff;
+  --pending: #c58fff;
+  --pendingLight: #c58fff54;
+  --categoryPill: #636982;
+  --darkSucess: #007656;
+
+  --box-shadow: 0 0px 4px rgba(0, 0, 0, 0.1);
+  --modal-backdrop-bg: rgba(52, 64, 84, 0.3);
+  --cardBorderRadius: 10px;
+  --inputRadius: 2px;
+  --btnRadius: 2px;
+  --fs14: 14px;
+  --fs13: 13px;
+  --fs12: 12px;
+}
+
+html {
+  height: 100%;
+}
+
+
+.fs-14 {
+  font-size: var(--fs14);
+}
+
+.fs-13 {
+  font-size: var(--fs13);
+}
+
+.fs-12 {
+  font-size: var(--fs12);
+}
+
+.eye-icon-css {
+  position: absolute !important;
+  right: 10px;
+  top: 32px;
+  cursor: pointer;
+}
+
+.auth-eye-icon-css {
+  position: absolute !important;
+  right: 10px;
+  top: 45px;
+  cursor: pointer;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 3px;
+}
+
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(204, 25, 25, 0);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #305B6157;
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px rgba(248, 241, 241, 0);
+  border-right: 7px solid rgba(0, 0, 0, 0.01);
+}
+
+textarea {
+  min-height: 88px !important;
+  border: 1px solid var(--border) !important;
+  background: transparent !important;
+  padding-inline-start: 10px;
+}
+
+textarea:focus-visible {
+  outline: none !important;
+}
+
+.custom_height_select textarea {
+  height: 175px !important;
+  border-radius: 2px !important;
+  border: 1px solid var(--border) !important;
+  background: transparent !important;
+}
+
+.form-control {
+  min-height: 48px;
+  border-radius: 2px;
+}
+
+.form-control:focus {
+  box-shadow: none !important;
+  border-color: var(--border) !important;
+}
+
+.text-primary {
+  color: var(--textprimary) !important;
+}
+
+.text-light {
+  color: var(--textLight) !important;
+}
+
+.form_label {
+  font-size: 14px !important;
+  font-weight: 400;
+  color: var(--textLight);
+}
+
+.form_error {
+  font-size: 14px !important;
+  font-weight: 400;
+}
+
+.theme-background {
+  display: flex;
+}
+
+.theme-background>* {
+  width: 30px;
+  height: 30px;
+}
+
+.theme_background_input {
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.theme_background_input input {
+  margin-right: 20px;
+}
+
+.theme_container {
+  background: var(--hoverColor);
+  box-shadow: var(--box-shadow);
+  border-radius: 0px 0px 15px 15px;
+  position: fixed;
+  left: 45%;
+  top: 0px;
+  z-index: 1111;
+}
+
+.radio_check_theme input {
+  opacity: 0;
+  cursor: pointer;
+}
+
+
+.rmdp-container {
+  width: 100%;
+  position: relative;
+  z-index: auto !important;
+}
+
+.rmdp-container input {
+  width: 100%;
+  height: 48px;
+  border-radius: 2px;
+  background-color: transparent;
+  padding-inline-start: 10px;
+}
+
+.rmdp-input:focus {
+  box-shadow: none !important;
+}
+
+.rmdp-shadow {
+  box-shadow: var(--box-shadow) !important;
+}
+
+.rmdp-ep-arrow {
+  visibility: hidden !important;
+}
+
+.rmdp-day span {
+  top: 4px !important;
+  left: 7px !important;
+  width: 33px !important;
+  height: 30px !important;
+}
+
+.rmdp-day.rmdp-selected span:not(.highlight) {
+  box-shadow: var(--box-shadow) !important;
+}
+
+.rc-time-picker-input {
+  background-color: transparent !important;
+  border: none !important;
+  font-size: 16px !important;
+  height: 100% !important;
+  margin-top: 5px !important;
+  padding-left: 0px !important;
+  color: var(--textdark) !important;
+  position: relative !important;
+  border-radius: 2px !important;
+  outline: none !important;
+}
+
+.rc-time-picker-panel {
+  min-width: 200px !important;
+}
+
+.rc-time-picker-panel-input-wrap {
+  min-width: 200px !important;
+}
+
+.rc-time-picker-panel-narrow {
+  min-width: 200px !important;
+}
+
+.rc-time-picker-panel-select {
+  min-width: 100px !important;
+}
+
+.rc-time-picker-panel-inner {
+  border: none !important;
+  box-shadow: var(--box-shadow) !important;
+}
+
+.rc-time-picker-panel-select-option-selected {
+  color: var(--textprimary) !important;
+  background-color: var(--hoverColor) !important;
+}
+
+.rc-time-picker-panel-select li:hover {
+  background-color: var(--hoverColor) !important;
+}
+
+.custom_select_input__control {
+  background: transparent !important;
+  max-height: 48px !important;
+  border-radius: 2px !important;
+  border-color: var(--border) !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.css-t3ipsp-control {
+  outline: none !important;
+  box-shadow: none !important;
+  border-color: var(--border) !important;
+}
+
+.css-t3ipsp-control:hover {
+  outline: none !important;
+  box-shadow: none !important;
+  border-color: var(--border) !important;
+}
+
+.custom_select_input__indicator-separator {
+  display: none !important;
+}
+
+.custom_select_input__multi-value {
+  width: min-content !important;
+  background: var(--border) !important;
+}
+
+.custom_select_input__multi-value__label {
+  color: var(--textLight) !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+}
+
+.custom_select_input__multi-value__remove {
+  color: var(--textLight) !important;
+  background: var(--border) !important;
+}
+
+.custom_select_input__value-container--is-multi {
+  padding-top: 10px !important;
+  padding-inline-start: 10px !important;
+}
+
+.react-time-picker__inputGroup__input {
+  width: 50% !important;
+}
+
+.work_space_not_found {
+  font-size: 30px;
+  font-weight: 800;
+}
+
+.form-control.is-invalid,
+.was-validated .form-control:invalid {
+  background-image: none;
+}
+
+.border-red {
+  border: 1px solid var(--bs-danger);
+}
+
+.dropdownTitle {
+  background: transparent !important;
+  border: none !important;
+  padding: 0% !important;
+  color: var(--textLight) !important;
+}
+
+
+.dropdown_with_border {
+  background: transparent !important;
+  border: 1px solid var(--border) !important;
+  min-width: 392px !important;
+  border-radius: 0px !important;
+  color: var(--textLight) !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+}
+
+.dropdown-toggle::after {
+  border: none !important;
+  display: none !important;
+}
+
+.dropdownBorder .dropdown-css.dropdown-menu {
+  width: 100% !important;
+}
+
+.dropdown-css.dropdown-menu {
+  margin-top: 5px !important;
+  border: none !important;
+  padding: 0px !important;
+  font-style: normal;
+  font-weight: 700;
+  font-size: var(----fs14);
+  line-height: 26px;
+}
+
+.dropdown-item.active,
+.dropdown-item:active {
+  background-color: var(--textprimary) !important;
+}

@@ -1,0 +1,17 @@
+.rdt_Table {
+  background: transparent !important;
+  min-height: 26vh !important;
+}
+
+.rdt_TableBody {
+  min-height:  60vh !important;
+  overflow: hidden;
+}
+.rdt_TableRow{
+  min-height: 60px !important;
+  height: 100%;
+}
+.clm-data-table{
+  position: relative;
+  height: 100%;
+}

@@ -1,0 +1,14 @@
+.modal-content-container {
+  text-align: center;
+}
+
+.modal-content {
+  color: var(--textdark) !important;
+  background-color: var(--bgColor) !important;
+  border-radius: 4px !important;
+  border: none !important;
+  min-width: 400px !important;
+}
+.modal-header {
+  border-bottom: none !important;
+}

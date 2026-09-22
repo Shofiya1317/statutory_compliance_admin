@@ -1,0 +1,653 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable no-shadow */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-case-declarations */
+/* eslint-disable no-inner-declarations */
+/* eslint-disable react/no-unstable-nested-components */
+
+// "use client";
+
+import Avatar from '@/components/Avatar/Avatar';
+import Badge from '@/components/Badge/Badge';
+import Filter from '@/components/Filter/Filter';
+import InviteButton from '@/components/InviteButton/InviteButton';
+import IndicatorsActionDowpDown from '@/components/MasterList/Indicators/IndicatorsActionDowpDown';
+import IndicatorsList from '@/components/MasterList/Indicators/IndicatorsList';
+import IndicatorsWrapper from '@/components/MasterList/Indicators/IndicatorsWrapper';
+import IndustryList from '@/components/MasterList/Industries/IndustriesList';
+import IndustriesWrapper from '@/components/MasterList/Industries/IndustriesWrapper';
+import IndustryActionDowpDown from '@/components/MasterList/Industries/IndustryActionDowpDown';
+import MasterFilter from '@/components/MasterList/MasterFilter/MasterFilter';
+import ModulesActionDowpDown from '@/components/MasterList/Modules/ModulesActionDowpDown';
+import ModulesList from '@/components/MasterList/Modules/ModulesList';
+import ModulesWrapper from '@/components/MasterList/Modules/ModulesWrapper';
+import QuestionsList from '@/components/MasterList/Question/IndicatorsList';
+import QuestionsActionDowpDown from '@/components/MasterList/Question/QuestionsActionDowpDown';
+import QuestionsWrapper from '@/components/MasterList/Question/QuestionsWrapper';
+import MobileFilter from '@/components/MasterList/Sector/MobileFilter';
+import SectorActionDowpDown from '@/components/MasterList/Sector/SectorActionDowpDown';
+import SectorList from '@/components/MasterList/Sector/SectorList';
+import SectorWrapper from '@/components/MasterList/Sector/SectorWrapper';
+import StandardsActionDowpDown from '@/components/MasterList/Standards/StandardsActionDowpDown';
+import StandardsList from '@/components/MasterList/Standards/StandardsList';
+import StandardsWrapper from '@/components/MasterList/Standards/StandardsWrapper';
+import PageNotFound from '@/components/PageNotFound/PageNotFound';
+import PageWrapper from '@/components/NavBarMenu/PageWrapper/PageWrapper';
+import Pagination from '@/components/Pagination/Pagination';
+import RolesAndAccess from '@/components/RolesAndAccess/RolesAndAccess';
+import ThemesIndustriesDropDown from '@/components/MasterList/ThemesIndustries/ThemesIndustriesDropdown';
+import ThemesIndustriesList from '@/components/MasterList/ThemesIndustries/ThemesIndustryList';
+import ThemesIndustryWrapper from '@/components/MasterList/ThemesIndustries/ThemesIndustryWrapper';
+import FileRepoDropdown from '@/components/MasterList/FileRepo/FileRepoDropdown';
+import FileRepoList from '@/components/MasterList/FileRepo/FileRepoList';
+import FileRepoWrapper from '@/components/MasterList/FileRepo/FileRepoWrapper';
+import Search from '@/components/Search/Search';
+import Sort from '@/components/Sort/Sort';
+import SubNav from '@/components/SubNav/SubNav';
+import CustomSelect from '@/components/CustomSelect/CustomSelect';
+import { auth } from '@/lib/auth';
+import { IDepartment } from '@/lib/interface/IDepartment.interface';
+import { IIndicator } from '@/lib/interface/IIndicator.interface';
+import { IIndustries } from '@/lib/interface/IIndustries.interface';
+import { IMeta } from '@/lib/interface/IMeta.interface';
+import { IThemes } from '@/lib/interface/IThemes.interface';
+import { IQuestion } from '@/lib/interface/IQuestions.interface';
+import { ISector } from '@/lib/interface/ISector.interface';
+import { IStandard } from '@/lib/interface/IStandard.interface';
+import { unstable_noStore as noStore } from 'next/cache';
+
+import {
+  AccountService,
+  IndicatorsService,
+  IndustryService,
+  ThemeService,
+  QuestionService,
+  SectorService,
+  StandardService,
+  ThemeIndustriesService,
+} from '@/lib/service';
+import * as FileRepoService from '@/lib/service/fileRepo';
+import {
+  convertToPascalCase,
+  formatDateList,
+  getStatusColor,
+  Params,
+} from '@/lib/utils';
+import { IThemesIndustries } from '@/lib/interface/IThemesIndustries.interface';
+
+export interface IFileRepoFilter {
+  company_name?: string;
+  year?: string;
+  report_name?: string;
+  limit?: string; // ✅ string
+  page?: string; // ✅ string
+}
+
+function renderTableRows<T>(
+  data: T[],
+  renderRow: (item: T) => React.ReactNode,
+) {
+  return data.map(renderRow);
+}
+
+function renderWithWrapper<T>({
+  data,
+  Wrapper,
+  renderRow,
+  ListComponent,
+  listProps,
+}: {
+  data: T[];
+  Wrapper: React.ComponentType<{ children: React.ReactNode }>;
+  renderRow: (item: T) => React.ReactNode;
+  ListComponent?: React.ComponentType<any>;
+  listProps?: any;
+}) {
+  if (!data?.length) return <PageNotFound />;
+  return (
+    <>
+      <Wrapper>{renderTableRows(data, renderRow)}</Wrapper>
+      {ListComponent && <ListComponent {...listProps} />}
+    </>
+  );
+}
+
+export const dynamic = 'force-dynamic';
+
+export default async function Page({
+  params,
+  searchParams,
+}: {
+  params: { slug: string };
+  searchParams: any;
+}) {
+  noStore();
+  const session = await auth();
+  const token = (session?.user as { accessToken: string })?.accessToken;
+
+  const filterParams = {
+    page: searchParams?.page || '1',
+    limit: searchParams?.limit || '50',
+    search: searchParams?.search || '',
+    status: searchParams?.status || '',
+    sort: searchParams?.sort || '-createdAt',
+    sector_name: searchParams?.sector_name || '',
+    industry_name: searchParams?.industry_name || '',
+    industry_id: searchParams?.industry_id || '',
+    module_name: searchParams?.module_name || '',
+    module_id: searchParams?.module_id || '',
+    question_type: searchParams?.question_type || '',
+    standard_name: searchParams?.standard_name || '',
+    standard_id: searchParams?.standard_id || '',
+    indicator_name: searchParams?.indicator_name || '',
+    indicator_id: searchParams?.indicator_id || '',
+    year: searchParams?.year || '',
+    company_name: searchParams?.company_name || '',
+  };
+
+  let metaList: IMeta = {
+    currentCount: 1,
+    currentPage: '1',
+    currentLimit: '10',
+    totalCount: 1,
+  };
+
+  // eslint-disable-next-line react/no-unstable-nested-components
+  async function RenderComponents() {
+    switch (params?.slug) {
+      case 'sectors': {
+        const res = await SectorService.getAll(filterParams, token);
+        const { sectors, meta } = res?.data as {
+          sectors: ISector[];
+          meta: IMeta;
+        };
+        metaList = meta;
+        return renderWithWrapper<ISector>({
+          data: sectors,
+          Wrapper: SectorWrapper,
+          renderRow: (sector) => (
+            <tr key={sector.id} className="tableHover">
+              <td>
+                <div style={{ textTransform: 'capitalize' }}>
+                  {sector?.name}
+                </div>
+              </td>
+              <td>
+                {sector?.industry?.map((item) => (
+                  <div key={item?.id}>{item?.name}</div>
+                ))}
+              </td>
+              <td>{formatDateList(sector.updatedAt)}</td>
+              <td>
+                <Badge
+                  bg={getStatusColor(sector.status, true)}
+                  className={getStatusColor(sector.status, false)}
+                >
+                  {sector?.status || '-'}
+                </Badge>
+              </td>
+              <td className="text-center">
+                <SectorActionDowpDown sector={sector} />
+              </td>
+            </tr>
+          ),
+          ListComponent: SectorList,
+          listProps: { sectors },
+        });
+      }
+      case 'industries': {
+        const res = await IndustryService.getAll(filterParams, token);
+        const { industries, meta } = res?.data as {
+          industries: IIndustries[];
+          meta: IMeta;
+        };
+        metaList = meta;
+        return renderWithWrapper<IIndustries>({
+          data: industries,
+          Wrapper: IndustriesWrapper,
+          renderRow: (industry) => (
+            <tr key={industry.id} className="tableHover">
+              <td>
+                <div style={{ textTransform: 'capitalize' }}>
+                  {industry?.name}
+                </div>
+              </td>
+              <td>{industry?.sector?.name}</td>
+              <td>{formatDateList(industry.updatedAt)}</td>
+              <td>
+                <Badge
+                  bg={getStatusColor(industry.status, true)}
+                  className={getStatusColor(industry.status, false)}
+                >
+                  {industry?.status || '-'}
+                </Badge>
+              </td>
+              <td className="text-center">
+                <IndustryActionDowpDown industry={industry} />
+              </td>
+            </tr>
+          ),
+          ListComponent: IndustryList,
+          listProps: { industries },
+        });
+      }
+      case 'standards': {
+        // console.log(token, '+++++');
+        const res = await StandardService.getAll(filterParams, token);
+        // console.log(res, 'res')
+        const { standards, meta } = res?.data as {
+          standards: IStandard[];
+          meta: IMeta;
+        };
+
+        // console.log(standards, '=====');
+        metaList = meta;
+        const standardsWithThemes = await Promise.all(
+          (standards ?? []).map(async (standard) => {
+            const detailRes = await StandardService.getById(
+              standard.id,
+              token,
+              'themes',
+            );
+
+            return {
+              ...standard,
+              standard_themes: detailRes?.data?.data?.standard_themes ?? [],
+            };
+          }),
+        );
+
+        return renderWithWrapper<IStandard>({
+          data: standardsWithThemes,
+          Wrapper: StandardsWrapper,
+          renderRow: (standard) => (
+            <tr key={standard.id} className="tableHover">
+              {/* Logo */}
+              <td className="text-center">
+                <Avatar
+                  name={standard.name}
+                  size="40px"
+                  className="rounded-circle me-2"
+                  avator={standard?.logo_url || ''}
+                />
+              </td>
+
+              {/* Name */}
+              <td>
+                <div style={{ textTransform: 'capitalize' }}>
+                  {standard.name}
+                </div>
+              </td>
+
+              {/* Themes (NOW WORKING) */}
+              <td>
+                {standard.standard_themes.length
+                  ? standard.standard_themes.map((theme) => (
+                    <div key={theme.id}>{theme.name}</div>
+                  ))
+                  : '-'}
+              </td>
+
+              {/* Updated At */}
+              <td>{formatDateList(standard.updatedAt)}</td>
+
+              {/* Status */}
+              <td>
+                <Badge
+                  bg={getStatusColor(
+                    !standard.is_active ? 'DRAFT' : 'PUBLISH',
+                    true,
+                  )}
+                  className={getStatusColor(
+                    !standard.is_active ? 'DRAFT' : 'PUBLISH',
+                    false,
+                  )}
+                >
+                  {!standard.is_active ? 'Draft' : 'Publish'}
+                </Badge>
+              </td>
+
+              {/* Actions */}
+              <td className="text-center">
+                <StandardsActionDowpDown standard={standard} />
+              </td>
+            </tr>
+          ),
+          ListComponent: StandardsList,
+          listProps: { standards: standardsWithThemes },
+        });
+      }
+      case 'themes': {
+        const res = await ThemeService.getAll(filterParams, token);
+        const { data: themes, meta } = res?.data as {
+          data: IThemes[];
+          meta: IMeta;
+        };
+        metaList = meta;
+        return renderWithWrapper<IThemes>({
+          data: themes,
+          Wrapper: ModulesWrapper,
+          renderRow: (theme) => (
+            <tr key={theme.id} className="tableHover">
+              <td>
+                <div style={{ textTransform: 'capitalize' }}>{theme?.name}</div>
+              </td>
+              {/* <td>
+                {module?.indicators?.map((item) => (
+                  <div key={item?.id}>{item?.name}</div>
+                )) || '-'}
+              </td> */}
+              <td>{formatDateList(theme.updatedAt)}</td>
+              <td>
+                <Badge
+                  bg={getStatusColor(
+                    theme.is_deleted ? 'DELETED' : 'ACTIVE',
+                    true,
+                  )}
+                  className={getStatusColor(
+                    theme.is_deleted ? 'DELETED' : 'ACTIVE',
+                    false,
+                  )}
+                >
+                  {theme.is_deleted ? 'Deleted' : 'Active'}
+                </Badge>
+              </td>
+              <td className="text-center">
+                <ModulesActionDowpDown theme={theme} />
+              </td>
+            </tr>
+          ),
+          ListComponent: ModulesList,
+          listProps: { themes },
+        });
+      }
+      case 'themes_industries': {
+        const res = await ThemeIndustriesService.getAll(filterParams, token);
+
+        const themes = (res?.data?.data || []) as IThemesIndustries[];
+
+        metaList = res?.data?.meta;
+
+        return renderWithWrapper<IThemesIndustries>({
+          data: themes,
+          Wrapper: ThemesIndustryWrapper,
+          renderRow: (theme) => (
+            <tr key={theme.id} className="tableHover">
+              {/* Theme Name */}
+              <td>
+                <div style={{ textTransform: 'capitalize' }}>
+                  {`${theme.theme?.name} - ${theme.theme?.standard?.name ?? ''}` || '-'}
+                </div>
+              </td>
+
+              {/* Industry Name */}
+              <td>
+                <div style={{ textTransform: 'capitalize' }}>
+                  {theme.industry?.name || '-'}
+                </div>
+              </td>
+
+              {/* Weightage */}
+              <td>{theme.weightage ?? 0}</td>
+
+              {/* Updated At */}
+              <td>{formatDateList(theme.updatedAt)}</td>
+
+              {/* Status */}
+              <td>
+                <Badge
+                  bg={getStatusColor(
+                    theme.is_deleted ? 'DELETED' : 'ACTIVE',
+                    true,
+                  )}
+                  className={getStatusColor(
+                    theme.is_deleted ? 'DELETED' : 'ACTIVE',
+                    false,
+                  )}
+                >
+                  {theme.is_deleted ? 'Deleted' : 'Active'}
+                </Badge>
+              </td>
+
+              {/* Actions */}
+              <td className="text-center">
+                <ThemesIndustriesDropDown themeIndustry={theme} />
+              </td>
+            </tr>
+          ),
+          ListComponent: ThemesIndustriesList,
+          listProps: { themes },
+        });
+      }
+      case 'indicators': {
+        const res = await IndicatorsService.getAll(filterParams, token);
+        const { indicators, meta } = res?.data as {
+          indicators: IIndicator[];
+          meta: IMeta;
+        };
+        metaList = meta;
+        return renderWithWrapper<IIndicator>({
+          data: indicators,
+          Wrapper: IndicatorsWrapper,
+          renderRow: (indicator) => (
+            <tr key={indicator.id} className="tableHover">
+              <td>
+                <div style={{ textTransform: 'capitalize' }}>
+                  {indicator?.name}
+                </div>
+              </td>
+              <td>{formatDateList(indicator.updatedAt)}</td>
+              <td>{indicator?.questions?.length || 0}</td>
+              <td>
+                <Badge
+                  bg={getStatusColor(
+                    indicator.is_deleted ? 'DELETED' : 'ACTIVE',
+                    true,
+                  )}
+                  className={getStatusColor(
+                    indicator.is_deleted ? 'DELETED' : 'ACTIVE',
+                    false,
+                  )}
+                >
+                  {indicator.is_deleted ? 'Deleted' : 'Active'}
+                </Badge>
+              </td>
+              <td className="text-center">
+                <IndicatorsActionDowpDown indicator={indicator} />
+              </td>
+            </tr>
+          ),
+          ListComponent: IndicatorsList,
+          listProps: { indicators },
+        });
+      }
+      case 'questions': {
+        const res = await QuestionService.getAll(filterParams, token);
+        const { questions, meta } = res?.data as {
+          questions: IQuestion[];
+          meta: IMeta;
+        };
+        metaList = meta;
+        return renderWithWrapper<IQuestion>({
+          data: questions,
+          Wrapper: QuestionsWrapper,
+          renderRow: (question) => (
+            <tr key={question.id} className="tableHover">
+              <td>
+                <div style={{ textTransform: 'capitalize', width: '35%' }}>
+                  {question?.title}
+                </div>
+              </td>
+              <td>
+                <h6
+                  className="fw-semibold mb-0 text-start"
+                  style={{ color: '#3485AE' }}
+                >
+                  {convertToPascalCase(
+                    question?.question_type
+                      ?.replace('_SELECT', ' ')
+                      .replace('_', ' '),
+                  )}
+                </h6>
+              </td>
+              <td>{question?.indicator?.name}</td>
+              <td>{question?.universal_question_id}</td>
+              <td>{formatDateList(question.updatedAt)}</td>
+              <td>
+                <Badge
+                  bg={getStatusColor(
+                    question.is_deleted ? 'DELETED' : 'ACTIVE',
+                    true,
+                  )}
+                  className={getStatusColor(
+                    question.is_deleted ? 'DELETED' : 'ACTIVE',
+                    false,
+                  )}
+                >
+                  {question.is_deleted ? 'Deleted' : 'Active'}
+                </Badge>
+              </td>
+              <td className="text-center">
+                <QuestionsActionDowpDown question={question} />
+              </td>
+            </tr>
+          ),
+          ListComponent: QuestionsList,
+          listProps: { questions },
+        });
+      }
+      case 'roles': {
+        const roleRes = await AccountService.accontRoleConfig(token);
+        return <RolesAndAccess roleAccess={roleRes?.data} isMaster />;
+      }
+      case 'file_repo': {
+        const res = await FileRepoService.getAll(filterParams, token);
+        const apiData = res?.data?.data;
+
+        const fileRepos = (apiData?.data || []) as any[];
+
+        metaList = {
+          currentCount: fileRepos.length,
+          currentPage: String(apiData?.page ?? 1),
+          currentLimit: String(apiData?.limit ?? 10),
+          totalCount: apiData?.total ?? 0,
+        };
+
+        return renderWithWrapper({
+          data: fileRepos,
+          Wrapper: FileRepoWrapper,
+          renderRow: (fileRepo: any) => (
+            <tr key={fileRepo.id} className="tableHover">
+              <td>{fileRepo.company_name || '-'}</td>
+              <td>{fileRepo.year || '-'}</td>
+              <td>{fileRepo.report_name || '-'}</td>
+              <td>
+                {fileRepo.file_url ? (
+                  <a
+                    href={fileRepo.file_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    View file
+                  </a>
+                ) : (
+                  '-'
+                )}
+              </td>
+              <td>{formatDateList(fileRepo.updatedAt)}</td>
+              <td>
+                <Badge
+                  bg={getStatusColor(
+                    fileRepo.is_deleted ? 'DELETED' : 'ACTIVE',
+                    true,
+                  )}
+                  className={getStatusColor(
+                    fileRepo.is_deleted ? 'DELETED' : 'ACTIVE',
+                    false,
+                  )}
+                >
+                  {fileRepo.is_deleted ? 'Deleted' : 'Active'}
+                </Badge>
+              </td>
+              <td className="text-center">
+                <FileRepoDropdown fileRepo={fileRepo} />
+              </td>
+            </tr>
+          ),
+          ListComponent: FileRepoList,
+          listProps: { fileRepos },
+        });
+      }
+
+      default:
+        return <PageNotFound />;
+    }
+  }
+
+  return (
+    <div>
+      <SubNav activePage={params?.slug} />
+      <PageWrapper
+        stackComponent={
+          params.slug !== 'roles' ? (
+            <div className="d-flex align-items-center">
+              <div className="desktop-search w-100 me-3">
+                <Search params={filterParams as Params} />
+              </div>
+              <div className="desktop-search" style={{ minWidth: '200px' }}>
+                <Sort params={filterParams as Params} />
+              </div>
+              <div className="common-sort ms-3">
+                <Filter>
+                  <MasterFilter params={filterParams} slug={params?.slug} />
+                </Filter>
+              </div>
+              <div className="mt-2 ms-2">
+                <InviteButton
+                  btnName={convertToPascalCase(
+                    params?.slug?.replace('_', ' ') || '',
+                  )}
+                />
+              </div>
+              {['questions', 'sectors', 'industries']?.includes(
+                params?.slug,
+              ) && (
+                <div className="mt-2 ms-2">
+                  <InviteButton
+                    btnName={convertToPascalCase(
+                      params?.slug?.replace('_', ' ') || '',
+                    )}
+                    isUpload
+                  />
+                </div>
+              )}
+            </div>
+          ) : (
+            <div />
+          )
+        }
+      >
+        <div className="common-mobile-searchsection mb-3">
+          <Search params={params as Params} />
+        </div>
+        {await RenderComponents()}
+        {metaList && params.slug !== 'roles' && (
+          <div className="my-4 pagination_padding">
+            <Pagination
+              meta={metaList}
+              currentPage={searchParams?.page || '1'}
+              component={convertToPascalCase(
+                params?.slug?.replaceAll('_', ' ') || '',
+              )}
+            />
+          </div>
+        )}
+
+        <div className="d-lg-none d-md-block">
+          <MobileFilter params={filterParams} />
+        </div>
+      </PageWrapper>
+    </div>
+  );
+}

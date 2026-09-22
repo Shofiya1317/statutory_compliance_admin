@@ -1,0 +1,48 @@
+.common_solid_button .btn-primary {
+  background-color: var(--textprimary) !important;
+  border-color: var(--textprimary) !important;
+  border-radius: 6px !important;
+  padding: 10px 16px !important;
+  color: var(--bgColor) !important;
+  text-align: center;
+  font-weight: 700 !important;
+}
+.common_secondary_button .btn-primary {
+  background-color: var(--hoverColor) !important;
+  border-color: var(--hoverColor) !important;
+  border-radius: 6px !important;
+  padding: 10px 16px !important;
+  color: var(--textLight) !important;
+  text-align: center;
+  font-weight: 700 !important;
+}
+.common_hallow_button .btn-primary {
+  border: 1px solid var(--border) !important;
+  border-radius: 6px;
+  padding: 10px 16px;
+  color: var(--textLight) !important;
+  text-align: center;
+  background: transparent !important;
+  font-weight: 500;
+}
+
+.common_link_button .btn-primary {
+  border: 0px solid var(--border) !important;
+  border-radius: 6px;
+  padding: 10px 16px;
+  color: var(--textLight) !important;
+  text-align: center;
+  background: transparent !important;
+  font-weight: 500;
+}
+
+
+.common_hallowdanger_button .btn-primary {
+  border: 1px solid var(--danger) !important;
+  border-radius: 6px;
+  padding: 10px 16px;
+  color: var(--danger) !important;
+  text-align: center;
+  background: transparent !important;
+  font-weight: 500;
+}

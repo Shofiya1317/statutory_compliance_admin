@@ -1,0 +1,20 @@
+.is_radius {
+    text-decoration: none;
+    color: var(--textLight);
+    position: relative;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: var(--fs-14);
+    padding: 6px 12px;
+    border: 1px solid transparent;
+    border-radius: 30px;
+}
+
+.is_radius:hover {
+    color: var(--textprimary);
+}
+
+.is_radius.active {
+    color: var(--textprimary);
+    border: 1px solid var(--textprimary);
+}
