@@ -20,6 +20,11 @@ import AddorEditStandards from '../MasterList/Standards/AddorEditStandards';
 import AddOrEditThemesIndustries from '../MasterList/ThemesIndustries/AddOrEditThemesIndustries';
 import { useModal } from '../Modal/Context';
 import AddOrEditFileRepo from '../MasterList/FileRepo/AddOrEditFileRepo';
+import AddorEditComplianceRequirement from '../MasterList/ComplianceRequirement/AddorEditComplianceRequirement';
+import AddorEditComplianceObligation from '../MasterList/ComplianceObligation/AddorEditComplianceObligation';
+import AddorEditComplianceScope from '../MasterList/ComplianceScope/AddorEditComplianceScope';
+import AddorEditQuestionnaire from '../MasterList/Questionnaire/AddorEditQuestionnaire';
+import AddorEditApplicabilityRules from '../MasterList/ApplicabilityRules/AddorEditApplicabilityRules';
 // import AddorEditSubIndicators from '../MasterList/SubIndicators/AddorEditSubIndicators';
 // import AddorEditDepartment from '../MasterList/Department/AddorEditDepartment';
 // import AddOrEditWidgets from '../MasterList/Widgets/AddOrEditWidgets';
@@ -69,6 +74,41 @@ export default function InviteButton({
         return <AddOrEditQuestion actionType="Create" onClose={closeModal} />;
       case 'File Repo':
         return <AddOrEditFileRepo actionType="Create" onClose={closeModal} />;
+      case 'Compliance Requirement':
+        return (
+          <AddorEditComplianceRequirement
+            actionType="Create"
+            onClose={closeModal}
+          />
+        );
+      case 'Compliance Obligation':
+        return (
+          <AddorEditComplianceObligation
+            actionType="Create"
+            onClose={closeModal}
+          />
+        );
+      case 'Compliance Scope':
+        return (
+          <AddorEditComplianceScope
+            actionType="Create"
+            onClose={closeModal}
+          />
+        );
+      case 'Questionnaire':
+        return (
+          <AddorEditQuestionnaire
+            actionType="Create"
+            onClose={closeModal}
+          />
+        );
+      case 'Applicability Rules':
+        return (
+          <AddorEditApplicabilityRules
+            actionType="Create"
+            onClose={closeModal}
+          />
+        );
       default:
         return <div>Access no provided</div>;
     }
@@ -86,7 +126,7 @@ export default function InviteButton({
 
   const modal = useModal({
     style: {
-      size: isUpload || btnName === 'Questions' ? 'lg' : 'sm',
+      size: isUpload || btnName === 'Questions' || btnName === 'Questionnaire' || btnName === 'Applicability Rules' ? 'lg' : 'sm',
       title: isUpload ? undefined : `${buttonName()} ${btnName}`,
       onClose: isUpload ? () => closeModal() : undefined,
     },
