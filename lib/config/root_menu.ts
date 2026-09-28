@@ -29,7 +29,7 @@ export const profileMenu = [
 ];
 
 export const Mastersmenu = [
-  'Sector',
+  'Sectors',
   'Industries',
   'Category',
   'Act',

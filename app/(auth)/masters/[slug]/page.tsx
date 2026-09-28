@@ -12,6 +12,12 @@ import Avatar from '@/components/Avatar/Avatar';
 import Badge from '@/components/Badge/Badge';
 import Filter from '@/components/Filter/Filter';
 import InviteButton from '@/components/InviteButton/InviteButton';
+import ActActionDowpDown from '@/components/MasterList/Act/ActActionDowpDown';
+import ActList from '@/components/MasterList/Act/ActList';
+import ActWrapper from '@/components/MasterList/Act/ActWrapper';
+import CategoryActionDowpDown from '@/components/MasterList/Category/CategoryActionDowpDown';
+import CategoryList from '@/components/MasterList/Category/CategoryList';
+import CategoryWrapper from '@/components/MasterList/Category/CategoryWrapper';
 import IndicatorsActionDowpDown from '@/components/MasterList/Indicators/IndicatorsActionDowpDown';
 import IndicatorsList from '@/components/MasterList/Indicators/IndicatorsList';
 import IndicatorsWrapper from '@/components/MasterList/Indicators/IndicatorsWrapper';
@@ -29,6 +35,9 @@ import MobileFilter from '@/components/MasterList/Sector/MobileFilter';
 import SectorActionDowpDown from '@/components/MasterList/Sector/SectorActionDowpDown';
 import SectorList from '@/components/MasterList/Sector/SectorList';
 import SectorWrapper from '@/components/MasterList/Sector/SectorWrapper';
+import SectionActionDowpDown from '@/components/MasterList/Section/SectionActionDowpDown';
+import SectionList from '@/components/MasterList/Section/SectionList';
+import SectionWrapper from '@/components/MasterList/Section/SectionWrapper';
 import StandardsActionDowpDown from '@/components/MasterList/Standards/StandardsActionDowpDown';
 import StandardsList from '@/components/MasterList/Standards/StandardsList';
 import StandardsWrapper from '@/components/MasterList/Standards/StandardsWrapper';
@@ -232,194 +241,189 @@ export default async function Page({
           listProps: { industries },
         });
       }
-      case 'standards': {
-        // console.log(token, '+++++');
-        const res = await StandardService.getAll(filterParams, token);
-        // console.log(res, 'res')
-        const { standards, meta } = res?.data as {
-          standards: IStandard[];
-          meta: IMeta;
-        };
+      case 'category': {
+        const categories = [
+          {
+            id: '1',
+            name: 'Finance',
+            description: 'Financial compliance and reporting requirements.',
+            status: 'ACTIVE',
+          },
+          {
+            id: '2',
+            name: 'Human Resources',
+            description: 'Employee policy and workforce compliance.',
+            status: 'INACTIVE',
+          },
+        ];
 
-        // console.log(standards, '=====');
-        metaList = meta;
-        const standardsWithThemes = await Promise.all(
-          (standards ?? []).map(async (standard) => {
-            const detailRes = await StandardService.getById(
-              standard.id,
-              token,
-              'themes',
-            );
-
-            return {
-              ...standard,
-              standard_themes: detailRes?.data?.data?.standard_themes ?? [],
-            };
-          }),
-        );
-
-        return renderWithWrapper<IStandard>({
-          data: standardsWithThemes,
-          Wrapper: StandardsWrapper,
-          renderRow: (standard) => (
-            <tr key={standard.id} className="tableHover">
-              {/* Logo */}
-              <td className="text-center">
-                <Avatar
-                  name={standard.name}
-                  size="40px"
-                  className="rounded-circle me-2"
-                  avator={standard?.logo_url || ''}
-                />
-              </td>
-
-              {/* Name */}
+        return renderWithWrapper<any>({
+          data: categories,
+          Wrapper: CategoryWrapper,
+          renderRow: (category) => (
+            <tr key={category.id} className="tableHover">
               <td>
                 <div style={{ textTransform: 'capitalize' }}>
-                  {standard.name}
+                  {category?.name || '-'}
                 </div>
               </td>
-
-              {/* Themes (NOW WORKING) */}
-              <td>
-                {standard.standard_themes.length
-                  ? standard.standard_themes.map((theme) => (
-                    <div key={theme.id}>{theme.name}</div>
-                  ))
-                  : '-'}
-              </td>
-
-              {/* Updated At */}
-              <td>{formatDateList(standard.updatedAt)}</td>
-
-              {/* Status */}
+              <td>{category?.description || '-'}</td>
               <td>
                 <Badge
                   bg={getStatusColor(
-                    !standard.is_active ? 'DRAFT' : 'PUBLISH',
+                    category?.status === 'ACTIVE' ? 'ACTIVE' : 'DRAFT',
                     true,
                   )}
                   className={getStatusColor(
-                    !standard.is_active ? 'DRAFT' : 'PUBLISH',
+                    category?.status === 'ACTIVE' ? 'ACTIVE' : 'DRAFT',
                     false,
                   )}
                 >
-                  {!standard.is_active ? 'Draft' : 'Publish'}
+                  {category?.status || 'ACTIVE'}
                 </Badge>
               </td>
-
-              {/* Actions */}
               <td className="text-center">
-                <StandardsActionDowpDown standard={standard} />
+                <CategoryActionDowpDown category={category} />
               </td>
             </tr>
           ),
-          ListComponent: StandardsList,
-          listProps: { standards: standardsWithThemes },
+          ListComponent: CategoryList,
+          listProps: { categories },
         });
       }
-      case 'themes': {
-        const res = await ThemeService.getAll(filterParams, token);
-        const { data: themes, meta } = res?.data as {
-          data: IThemes[];
-          meta: IMeta;
-        };
-        metaList = meta;
-        return renderWithWrapper<IThemes>({
-          data: themes,
-          Wrapper: ModulesWrapper,
-          renderRow: (theme) => (
-            <tr key={theme.id} className="tableHover">
+      case 'act': {
+        const acts = [
+          {
+            id: '1',
+            name: 'Factories Act',
+            description: 'Regulates working conditions and industrial safety.',
+            category: 'Labour',
+            frequency: 'Annual',
+            due_date: '30-06-2026',
+            short_name: 'FA',
+            act_number: 'ACT-01',
+            act_type: 'Labour',
+            government_level: 'Central',
+            jurisdiction: 'India',
+            enactment_date: '1948-04-01',
+            effective_from: '1948-04-01',
+            effective_to: 'N/A',
+            status: 'ACTIVE',
+          },
+          {
+            id: '2',
+            name: 'Payment of Gratuity Act',
+            description: 'Covers gratuity payment to employees.',
+            category: 'Employee Benefits',
+            frequency: 'Quarterly',
+            due_date: '15-03-2026',
+            short_name: 'POG',
+            act_number: 'ACT-02',
+            act_type: 'Employee Benefit',
+            government_level: 'Central',
+            jurisdiction: 'India',
+            enactment_date: '1972-09-21',
+            effective_from: '1972-09-21',
+            effective_to: 'N/A',
+            status: 'INACTIVE',
+          },
+        ];
+
+        return renderWithWrapper<any>({
+          data: acts,
+          Wrapper: ActWrapper,
+          renderRow: (act) => (
+            <tr key={act.id} className="tableHover">
               <td>
-                <div style={{ textTransform: 'capitalize' }}>{theme?.name}</div>
+                <div style={{ textTransform: 'capitalize' }}>{act?.name || '-'}</div>
               </td>
-              {/* <td>
-                {module?.indicators?.map((item) => (
-                  <div key={item?.id}>{item?.name}</div>
-                )) || '-'}
-              </td> */}
-              <td>{formatDateList(theme.updatedAt)}</td>
+              <td>{act?.category || '-'}</td>
+              <td>{act?.due_date || '-'}</td>
+              <td>{act?.act_number || '-'}</td>
+              <td>{act?.government_level || '-'}</td>
+              <td>{act?.jurisdiction || '-'}</td>
               <td>
                 <Badge
                   bg={getStatusColor(
-                    theme.is_deleted ? 'DELETED' : 'ACTIVE',
+                    act?.status === 'ACTIVE' ? 'ACTIVE' : 'DRAFT',
                     true,
                   )}
                   className={getStatusColor(
-                    theme.is_deleted ? 'DELETED' : 'ACTIVE',
+                    act?.status === 'ACTIVE' ? 'ACTIVE' : 'DRAFT',
                     false,
                   )}
                 >
-                  {theme.is_deleted ? 'Deleted' : 'Active'}
+                  {act?.status || 'ACTIVE'}
                 </Badge>
               </td>
               <td className="text-center">
-                <ModulesActionDowpDown theme={theme} />
+                <ActActionDowpDown act={act} />
               </td>
             </tr>
           ),
-          ListComponent: ModulesList,
-          listProps: { themes },
+          ListComponent: ActList,
+          listProps: { acts },
         });
       }
-      case 'themes_industries': {
-        const res = await ThemeIndustriesService.getAll(filterParams, token);
+      case 'section': {
+        const sections = [
+          {
+            id: '1',
+            name: 'Working Hours',
+            description: 'Requirements related to employee working hours.',
+            act: 'Factories Act',
+            sequence: '1',
+            status: 'ACTIVE',
+            updatedAt: '2026-09-22',
+          },
+          {
+            id: '2',
+            name: 'Leave Policy',
+            description: 'Requirements related to employee leave policy.',
+            act: 'Shops and Establishments Act',
+            sequence: '2',
+            status: 'INACTIVE',
+            updatedAt: '2026-09-22',
+          },
+        ];
 
-        const themes = (res?.data?.data || []) as IThemesIndustries[];
-
-        metaList = res?.data?.meta;
-
-        return renderWithWrapper<IThemesIndustries>({
-          data: themes,
-          Wrapper: ThemesIndustryWrapper,
-          renderRow: (theme) => (
-            <tr key={theme.id} className="tableHover">
-              {/* Theme Name */}
+        return renderWithWrapper<any>({
+          data: sections,
+          Wrapper: SectionWrapper,
+          renderRow: (section) => (
+            <tr key={section.id} className="tableHover">
               <td>
                 <div style={{ textTransform: 'capitalize' }}>
-                  {`${theme.theme?.name} - ${theme.theme?.standard?.name ?? ''}` || '-'}
+                  {section?.name || '-'}
                 </div>
               </td>
-
-              {/* Industry Name */}
-              <td>
-                <div style={{ textTransform: 'capitalize' }}>
-                  {theme.industry?.name || '-'}
-                </div>
-              </td>
-
-              {/* Weightage */}
-              <td>{theme.weightage ?? 0}</td>
-
-              {/* Updated At */}
-              <td>{formatDateList(theme.updatedAt)}</td>
-
-              {/* Status */}
+              <td>{section?.description || '-'}</td>
+              <td>{section?.act || '-'}</td>
+              <td>{section?.sequence || '-'}</td>
               <td>
                 <Badge
                   bg={getStatusColor(
-                    theme.is_deleted ? 'DELETED' : 'ACTIVE',
+                    section?.status === 'ACTIVE' ? 'ACTIVE' : 'DRAFT',
                     true,
                   )}
                   className={getStatusColor(
-                    theme.is_deleted ? 'DELETED' : 'ACTIVE',
+                    section?.status === 'ACTIVE' ? 'ACTIVE' : 'DRAFT',
                     false,
                   )}
                 >
-                  {theme.is_deleted ? 'Deleted' : 'Active'}
+                  {section?.status || 'ACTIVE'}
                 </Badge>
               </td>
-
-              {/* Actions */}
               <td className="text-center">
-                <ThemesIndustriesDropDown themeIndustry={theme} />
+                <SectionActionDowpDown section={section} />
               </td>
             </tr>
           ),
-          ListComponent: ThemesIndustriesList,
-          listProps: { themes },
+          ListComponent: SectionList,
+          listProps: { sections },
         });
       }
+
       case 'indicators': {
         const res = await IndicatorsService.getAll(filterParams, token);
         const { indicators, meta } = res?.data as {

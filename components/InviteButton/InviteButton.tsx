@@ -10,12 +10,15 @@ import { GoUpload } from 'react-icons/go';
 import AddorEditAccount from '../AddorEditAccount/AddorEditAccount';
 import AddorEditUser from '../AddorEditUser/AddorEditUser';
 import Button from '../Button/Button';
+import AddorEditAct from '../MasterList/Act/AddorEditAct';
+import AddorEditCategory from '../MasterList/Category/AddorEditCategory';
 import FileUploader from '../MasterList/FileUploader/FileUploader';
 import AddorEditIndicators from '../MasterList/Indicators/AddorEditIndicators';
 import AddorEditIndusties from '../MasterList/Industries/AddorEditIndusties';
 import AddorEditModules from '../MasterList/Modules/AddorEditModules';
 import AddOrEditQuestion from '../MasterList/Question/AddOrEditQuestion';
 import AddorEditSector from '../MasterList/Sector/AddorEditSector';
+import AddorEditSection from '../MasterList/Section/AddorEditSection';
 import AddorEditStandards from '../MasterList/Standards/AddorEditStandards';
 import AddOrEditThemesIndustries from '../MasterList/ThemesIndustries/AddOrEditThemesIndustries';
 import { useModal } from '../Modal/Context';
@@ -55,6 +58,12 @@ export default function InviteButton({
         return <AddorEditIndusties actionType="Create" onClose={closeModal} />;
       case 'Sectors':
         return <AddorEditSector actionType="Create" onClose={closeModal} />;
+      case 'Category':
+        return <AddorEditCategory actionType="Create" onClose={closeModal} />;
+      case 'Act':
+        return <AddorEditAct actionType="Create" onClose={closeModal} />;
+      case 'Section':
+        return <AddorEditSection actionType="Create" onClose={closeModal} />;
       case 'Standards':
         return <AddorEditStandards actionType="Create" onClose={closeModal} />;
       case 'Themes':
@@ -86,7 +95,8 @@ export default function InviteButton({
 
   const modal = useModal({
     style: {
-      size: isUpload || btnName === 'Questions' ? 'lg' : 'sm',
+      size:
+        isUpload || btnName === 'Questions' || btnName === 'Act' ? 'lg' : 'sm',
       title: isUpload ? undefined : `${buttonName()} ${btnName}`,
       onClose: isUpload ? () => closeModal() : undefined,
     },
