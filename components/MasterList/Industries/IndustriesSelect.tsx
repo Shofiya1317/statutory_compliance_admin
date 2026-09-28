@@ -38,24 +38,53 @@ export default function IndustriesSelect({
     OptionsOrGroups<Option, GroupBase<Option>>
   >([]);
 
+  const fallbackIndustries: Option[] = [
+    { label: 'Chemicals', value: 'Chemicals' },
+    { label: 'Heavy Engineering', value: 'Heavy Engineering' },
+    { label: 'Specialty Chemicals', value: 'Specialty Chemicals' },
+    { label: 'Petroleum Refining', value: 'Petroleum Refining' },
+    { label: 'Construction', value: 'Construction' },
+    { label: 'Real Estate', value: 'Real Estate' },
+    { label: 'Software Services', value: 'Software Services' },
+    { label: 'BPO/KPO', value: 'BPO/KPO' },
+    { label: 'Pharmaceuticals', value: 'Pharmaceuticals' },
+    { label: 'Automobile & Auto Components', value: 'Automobile & Auto Components' },
+    { label: 'Banking & Financial Services', value: 'Banking & Financial Services' },
+    { label: 'Textiles & Apparel', value: 'Textiles & Apparel' },
+    { label: 'Food Processing', value: 'Food Processing' },
+    { label: 'Mining & Metals', value: 'Mining & Metals' },
+    { label: 'Power & Renewable Energy', value: 'Power & Renewable Energy' },
+    { label: 'Logistics & Supply Chain', value: 'Logistics & Supply Chain' },
+  ];
+
   const loadOptions = useCallback(
     async (
       input: string,
     ): Promise<OptionsOrGroups<Option, GroupBase<Option>>> => {
-      const filter = { search: input, limit: searchParams?.limit || '50' };
-      const res = await IndustryService.getAll(filter);
-      const { industries } = res?.data as {
-      industries: IIndustries[];
-    };
+      try {
+        const filter = { search: input, limit: searchParams?.limit || '50' };
+        const res = await IndustryService.getAll(filter);
+        const { industries } = (res?.data || {}) as {
+          industries: IIndustries[];
+        };
 
-      const newOptions = industries
-        ?.filter((industry) => industry.status !== 'INACTIVE') // ✅ remove inactive
-        .map((industry) => ({
-          label: industry.name,
-          value: industry.id.toString(),
-        })) || [];
+        const newOptions = industries
+          ?.filter((industry) => industry.status !== 'INACTIVE') // ✅ remove inactive
+          .map((industry) => ({
+            label: industry.name,
+            value: industry.name || industry.id.toString(),
+          })) || [];
 
-      return newOptions;
+        if (newOptions.length > 0) {
+          return newOptions;
+        }
+      } catch (err) {
+        // fallback if API is not available or returns error
+      }
+
+      return fallbackIndustries.filter((item) =>
+        item.label.toLowerCase().includes((input || '').toLowerCase()),
+      );
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [],

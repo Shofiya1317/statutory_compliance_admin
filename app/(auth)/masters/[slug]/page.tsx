@@ -51,6 +51,21 @@ import ThemesIndustryWrapper from '@/components/MasterList/ThemesIndustries/Them
 import FileRepoDropdown from '@/components/MasterList/FileRepo/FileRepoDropdown';
 import FileRepoList from '@/components/MasterList/FileRepo/FileRepoList';
 import FileRepoWrapper from '@/components/MasterList/FileRepo/FileRepoWrapper';
+import ComplianceRequirementActionDropDown from '@/components/MasterList/ComplianceRequirement/ComplianceRequirementActionDropDown';
+import ComplianceRequirementList from '@/components/MasterList/ComplianceRequirement/ComplianceRequirementList';
+import ComplianceRequirementWrapper from '@/components/MasterList/ComplianceRequirement/ComplianceRequirementWrapper';
+import ComplianceObligationActionDropDown from '@/components/MasterList/ComplianceObligation/ComplianceObligationActionDropDown';
+import ComplianceObligationList from '@/components/MasterList/ComplianceObligation/ComplianceObligationList';
+import ComplianceObligationWrapper from '@/components/MasterList/ComplianceObligation/ComplianceObligationWrapper';
+import ComplianceScopeActionDropDown from '@/components/MasterList/ComplianceScope/ComplianceScopeActionDropDown';
+import ComplianceScopeList from '@/components/MasterList/ComplianceScope/ComplianceScopeList';
+import ComplianceScopeWrapper from '@/components/MasterList/ComplianceScope/ComplianceScopeWrapper';
+import QuestionnaireActionDropDown from '@/components/MasterList/Questionnaire/QuestionnaireActionDropDown';
+import QuestionnaireList from '@/components/MasterList/Questionnaire/QuestionnaireList';
+import QuestionnaireWrapper from '@/components/MasterList/Questionnaire/QuestionnaireWrapper';
+import ApplicabilityRulesActionDropDown from '@/components/MasterList/ApplicabilityRules/ApplicabilityRulesActionDropDown';
+import ApplicabilityRulesList from '@/components/MasterList/ApplicabilityRules/ApplicabilityRulesList';
+import ApplicabilityRulesWrapper from '@/components/MasterList/ApplicabilityRules/ApplicabilityRulesWrapper';
 import Search from '@/components/Search/Search';
 import Sort from '@/components/Sort/Sort';
 import SubNav from '@/components/SubNav/SubNav';
@@ -64,6 +79,11 @@ import { IThemes } from '@/lib/interface/IThemes.interface';
 import { IQuestion } from '@/lib/interface/IQuestions.interface';
 import { ISector } from '@/lib/interface/ISector.interface';
 import { IStandard } from '@/lib/interface/IStandard.interface';
+import { IComplianceRequirement } from '@/lib/interface/IComplianceRequirement.interface';
+import { IComplianceObligation } from '@/lib/interface/IComplianceObligation.interface';
+import { IComplianceScope } from '@/lib/interface/IComplianceScope.interface';
+import { IQuestionnaire } from '@/lib/interface/IQuestionnaire.interface';
+import { IApplicabilityRules } from '@/lib/interface/IApplicabilityRules.interface';
 import { unstable_noStore as noStore } from 'next/cache';
 
 import {
@@ -75,6 +95,11 @@ import {
   SectorService,
   StandardService,
   ThemeIndustriesService,
+  ComplianceRequirementService,
+  ComplianceObligationService,
+  ComplianceScopeService,
+  QuestionnaireService,
+  ApplicabilityRulesService,
 } from '@/lib/service';
 import * as FileRepoService from '@/lib/service/fileRepo';
 import {
@@ -581,6 +606,260 @@ export default async function Page({
           ),
           ListComponent: FileRepoList,
           listProps: { fileRepos },
+        });
+      }
+
+      case 'compliance_requirement': {
+        const res = await ComplianceRequirementService.getAll(filterParams, token);
+        const { complianceRequirements, meta } = (res?.data || {}) as {
+          complianceRequirements: IComplianceRequirement[];
+          meta: IMeta;
+        };
+        metaList = meta;
+        return renderWithWrapper<IComplianceRequirement>({
+          data: complianceRequirements,
+          Wrapper: ComplianceRequirementWrapper,
+          renderRow: (complianceRequirement) => (
+            <tr key={complianceRequirement.id} className="tableHover">
+              <td>
+                <div style={{ textTransform: 'capitalize' }}>
+                  {complianceRequirement?.name}
+                </div>
+              </td>
+              <td>
+                <div style={{ maxWidth: '400px', whiteSpace: 'normal' }}>
+                  {complianceRequirement?.description || '-'}
+                </div>
+              </td>
+              <td>{formatDateList(complianceRequirement.updatedAt)}</td>
+              <td>
+                <Badge
+                  bg={getStatusColor(complianceRequirement.status, true)}
+                  className={getStatusColor(complianceRequirement.status, false)}
+                >
+                  {complianceRequirement?.status || '-'}
+                </Badge>
+              </td>
+              <td className="text-center">
+                <ComplianceRequirementActionDropDown
+                  complianceRequirement={complianceRequirement}
+                />
+              </td>
+            </tr>
+          ),
+          ListComponent: ComplianceRequirementList,
+          listProps: { complianceRequirements },
+        });
+      }
+
+      case 'compliance_obligation': {
+        const res = await ComplianceObligationService.getAll(filterParams, token);
+        const { complianceObligations, meta } = (res?.data || {}) as {
+          complianceObligations: IComplianceObligation[];
+          meta: IMeta;
+        };
+        metaList = meta;
+        return renderWithWrapper<IComplianceObligation>({
+          data: complianceObligations,
+          Wrapper: ComplianceObligationWrapper,
+          renderRow: (complianceObligation) => (
+            <tr key={complianceObligation.id} className="tableHover">
+              <td>
+                <div style={{ textTransform: 'capitalize' }}>
+                  {complianceObligation?.name}
+                </div>
+              </td>
+              <td>
+                <div style={{ maxWidth: '350px', whiteSpace: 'normal' }}>
+                  {complianceObligation?.description || '-'}
+                </div>
+              </td>
+              <td>{complianceObligation?.section || '-'}</td>
+              <td>
+                <div style={{ maxWidth: '300px', whiteSpace: 'normal' }}>
+                  {complianceObligation?.applicability_rule || '-'}
+                </div>
+              </td>
+              <td>{formatDateList(complianceObligation.updatedAt)}</td>
+              <td>
+                <Badge
+                  bg={getStatusColor(complianceObligation.status, true)}
+                  className={getStatusColor(complianceObligation.status, false)}
+                >
+                  {complianceObligation?.status || '-'}
+                </Badge>
+              </td>
+              <td className="text-center">
+                <ComplianceObligationActionDropDown
+                  complianceObligation={complianceObligation}
+                />
+              </td>
+            </tr>
+          ),
+          ListComponent: ComplianceObligationList,
+          listProps: { complianceObligations },
+        });
+      }
+
+      case 'compliance_scope': {
+        const res = await ComplianceScopeService.getAll(filterParams, token);
+        const { complianceScopes, meta } = (res?.data || {}) as {
+          complianceScopes: IComplianceScope[];
+          meta: IMeta;
+        };
+        metaList = meta;
+        return renderWithWrapper<IComplianceScope>({
+          data: complianceScopes,
+          Wrapper: ComplianceScopeWrapper,
+          renderRow: (complianceScope) => (
+            <tr key={complianceScope.id} className="tableHover">
+              <td>
+                <div style={{ textTransform: 'capitalize' }}>
+                  {complianceScope?.name}
+                </div>
+              </td>
+              <td>
+                <div style={{ maxWidth: '400px', whiteSpace: 'normal' }}>
+                  {complianceScope?.description || '-'}
+                </div>
+              </td>
+              <td>{complianceScope?.compliance_obligation || '-'}</td>
+              <td>{formatDateList(complianceScope.updatedAt)}</td>
+              <td>
+                <Badge
+                  bg={getStatusColor(complianceScope.status, true)}
+                  className={getStatusColor(complianceScope.status, false)}
+                >
+                  {complianceScope?.status || '-'}
+                </Badge>
+              </td>
+              <td className="text-center">
+                <ComplianceScopeActionDropDown
+                  complianceScope={complianceScope}
+                />
+              </td>
+            </tr>
+          ),
+          ListComponent: ComplianceScopeList,
+          listProps: { complianceScopes },
+        });
+      }
+
+      case 'questionnaire': {
+        const res = await QuestionnaireService.getAll(filterParams, token);
+        const { questionnaires, meta } = (res?.data || {}) as {
+          questionnaires: IQuestionnaire[];
+          meta: IMeta;
+        };
+        metaList = meta;
+        return renderWithWrapper<IQuestionnaire>({
+          data: questionnaires,
+          Wrapper: QuestionnaireWrapper,
+          renderRow: (questionnaire) => (
+            <tr key={questionnaire.id} className="tableHover">
+              <td>
+                <div style={{ textTransform: 'capitalize', maxWidth: '350px', whiteSpace: 'normal' }}>
+                  {questionnaire?.title}
+                </div>
+              </td>
+              <td>
+                <h6
+                  className="fw-semibold mb-0 text-start"
+                  style={{ color: '#3485AE' }}
+                >
+                  {convertToPascalCase(
+                    questionnaire?.type
+                      ?.replace('_SELECT', ' ')
+                      ?.replace('_', ' ') || '',
+                  )}
+                </h6>
+              </td>
+              <td>{questionnaire?.compliance_scope || '-'}</td>
+              <td>
+                <span className="fw-medium text-dark">{questionnaire?.universal_question_id || '-'}</span>
+              </td>
+              <td>{formatDateList(questionnaire.updatedAt)}</td>
+              <td>
+                <Badge
+                  bg={getStatusColor(questionnaire.status, true)}
+                  className={getStatusColor(questionnaire.status, false)}
+                >
+                  {questionnaire?.status || '-'}
+                </Badge>
+              </td>
+              <td className="text-center">
+                <QuestionnaireActionDropDown
+                  questionnaire={questionnaire}
+                />
+              </td>
+            </tr>
+          ),
+          ListComponent: QuestionnaireList,
+          listProps: { questionnaires },
+        });
+      }
+
+      case 'applicability_rules': {
+        const res = await ApplicabilityRulesService.getAll(filterParams, token);
+        const { applicabilityRules, meta } = (res?.data || {}) as {
+          applicabilityRules: IApplicabilityRules[];
+          meta: IMeta;
+        };
+        metaList = meta;
+        return renderWithWrapper<IApplicabilityRules>({
+          data: applicabilityRules,
+          Wrapper: ApplicabilityRulesWrapper,
+          renderRow: (applicabilityRule) => (
+            <tr key={applicabilityRule.id} className="tableHover">
+              <td>
+                <div style={{ textTransform: 'capitalize', fontWeight: 500 }}>
+                  {applicabilityRule?.name}
+                </div>
+              </td>
+              <td>
+                <div style={{ maxWidth: '180px', whiteSpace: 'normal' }}>
+                  {Array.isArray(applicabilityRule?.sector)
+                    ? applicabilityRule.sector.join(', ')
+                    : applicabilityRule?.sector || '-'}
+                </div>
+              </td>
+              <td>
+                <div style={{ maxWidth: '180px', whiteSpace: 'normal' }}>
+                  {Array.isArray(applicabilityRule?.industries)
+                    ? applicabilityRule.industries.join(', ')
+                    : applicabilityRule?.industries || '-'}
+                </div>
+              </td>
+              <td>
+                {Array.isArray(applicabilityRule?.state)
+                  ? applicabilityRule.state.join(', ')
+                  : applicabilityRule?.state || '-'}
+              </td>
+              <td>
+                {Array.isArray(applicabilityRule?.listing_status)
+                  ? applicabilityRule.listing_status.join(', ')
+                  : applicabilityRule?.listing_status || '-'}
+              </td>
+              <td>{applicabilityRule?.employee_count || '-'}</td>
+              <td>{applicabilityRule?.revenue_band || '-'}</td>
+              <td>{formatDateList(applicabilityRule.updatedAt)}</td>
+              <td>
+                <Badge
+                  bg={getStatusColor(applicabilityRule.status, true)}
+                  className={getStatusColor(applicabilityRule.status, false)}
+                >
+                  {applicabilityRule?.status || '-'}
+                </Badge>
+              </td>
+              <td className="text-center">
+                <ApplicabilityRulesActionDropDown
+                  applicabilityRule={applicabilityRule}
+                />
+              </td>
+            </tr>
+          ),
+          ListComponent: ApplicabilityRulesList,
+          listProps: { applicabilityRules },
         });
       }
 

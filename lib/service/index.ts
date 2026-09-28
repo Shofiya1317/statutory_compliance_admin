@@ -13,3 +13,8 @@ export * as UserService from './user';
 export * as WidgetService from './widgets';
 export * as DashboardService from './dashboards';
 export * as ThemeIndustriesService from './themeIndustries';
+export * as ComplianceRequirementService from './complianceRequirement';
+export * as ComplianceObligationService from './complianceObligation';
+export * as ComplianceScopeService from './complianceScope';
+export * as QuestionnaireService from './questionnaire';
+export * as ApplicabilityRulesService from './applicabilityRules';
